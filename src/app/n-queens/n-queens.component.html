@@ -1,1 +1,24 @@
 <p>n-queens works!</p>
+
+<div>
+<label for="n">Number of Queens:</label>
+<input type="number" name="n" [(ngModel)]="n" required />
+
+<button (click)="solve()">Solve</button>
+</div>
+
+<div *ngIf="solutions.length > 0">
+<h3>Found {{ solutions.length }} solution(s):</h3>
+<div *ngFor="let solution of solutions">
+  <table>
+    <tr *ngFor="let row of solution">
+      <td *ngFor="let cell of row" [class.queen]="cell === 1"></td>
+    </tr>
+  </table>
+</div>
+</div>
+
+<div *ngIf="solutions.length === 0">
+<p>No solutions found.</p>
+</div>
+

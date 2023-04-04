@@ -1,82 +1,61 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-n-queens',
-  template: `
-    <h2>N-Queens Problem Solver</h2>
-    <form>
-      <label for="n">Enter N:</label>
-
-
-
-
-
-      <button type="submit" (click)="solve()">Solve</button>
-    </form>
-    <div *ngIf="solution">
-      <p>Solution:</p>
-      <table>
-        <tr *ngFor="let row of solution">
-          <td *ngFor="let col of row">{{ col === 1 ? 'Q' : '' }}</td>
-        </tr>
-      </table>
-    </div>
-  `,
+  templateUrl: './n-queens.component.html',
+  styleUrls: ['./n-queens.component.css'],
 })
-export class NQueensComponent implements OnInit {
-  n = 8;
-  solution!: number[][];
-
-  ngOnInit(): void {}
+export class NQueensComponent {
+  n: number = 8; // Default to 8 queens
+  board: number[][] = []; // The N x N chess board
+  solutions: number[][][] = []; // Array to hold all valid solutions
 
   solve(): void {
-    this.solution = this.solveNQueens(this.n);
+    this.board = []; // Clear the board
+    this.solutions = []; // Clear the solutions array
+    this.placeQueens(0, []); // Start placing queens at row 0
   }
 
-  private solveNQueens(n: number): number[][] {
-    const board: number[][] = [];
-    for (let i = 0; i < n; i++) {
-      board.push(Array(n).fill(0));
-    }
-    const solutions: number[][][] = [];
-    this.solveRecursively(board, 0, solutions);
-    return solutions[0];
-  }
-
-  private solveRecursively(
-    board: number[][],
-    col: number,
-    solutions: number[][][]
-  ): void {
-    if (col >= board.length) {
-      solutions.push(board.map((row) => [...row]));
+  placeQueens(row: number, positions: number[]): void {
+    if (row === this.n) {
+      // If all queens are placed, add the solution to the solutions array
+      this.solutions.push(this.copyBoard());
       return;
     }
-    for (let i = 0; i < board.length; i++) {
-      if (this.isSafe(board, i, col)) {
-        board[i][col] = 1;
-        this.solveRecursively(board, col + 1, solutions);
-        board[i][col] = 0;
+
+    // Try to place a queen in each column of the current row
+    for (let col = 0; col < this.n; col++) {
+      if (this.isSafe(row, col, positions)) {
+        // If the position is safe, place the queen and recurse
+        positions.push(col);
+        this.placeQueens(row + 1, positions);
+        positions.pop(); // Backtrack by removing the queen from the last position
       }
     }
   }
 
-  private isSafe(board: number[][], row: number, col: number): boolean {
-    for (let i = 0; i < col; i++) {
-      if (board[row][i] === 1) {
-        return false;
-      }
-    }
-    for (let i = row, j = col; i >= 0 && j >= 0; i--, j--) {
-      if (board[i][j] === 1) {
-        return false;
-      }
-    }
-    for (let i = row, j = col; i < board.length && j >= 0; i++, j--) {
-      if (board[i][j] === 1) {
+  isSafe(row: number, col: number, positions: number[]): boolean {
+    // Check if the current position is safe from attack by previously placed queens
+    for (let i = 0; i < positions.length; i++) {
+      const queenRow = i;
+      const queenCol = positions[i];
+      if (
+        col === queenCol ||
+        row - col === queenRow - queenCol ||
+        row + col === queenRow + queenCol
+      ) {
         return false;
       }
     }
     return true;
+  }
+
+  copyBoard(): number[][] {
+    // Helper method to copy the current board state
+    const copy = [];
+    for (let i = 0; i < this.n; i++) {
+      copy[i] = this.board[i].slice();
+    }
+    return copy;
   }
 }
