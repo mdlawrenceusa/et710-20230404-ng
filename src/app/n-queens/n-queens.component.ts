@@ -6,7 +6,11 @@ import { Component, OnInit } from '@angular/core';
     <h2>N-Queens Problem Solver</h2>
     <form>
       <label for="n">Enter N:</label>
-      <input type="number" name="n" [(ngModel)]="n" required />
+
+
+
+
+
       <button type="submit" (click)="solve()">Solve</button>
     </form>
     <div *ngIf="solution">
@@ -20,7 +24,7 @@ import { Component, OnInit } from '@angular/core';
   `,
 })
 export class NQueensComponent implements OnInit {
-  n!: number;
+  n = 8;
   solution!: number[][];
 
   ngOnInit(): void {}
