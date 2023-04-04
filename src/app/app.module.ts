@@ -15,6 +15,8 @@ import { NQueensComponent } from './n-queens/n-queens.component';
     ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: ProductListComponent },
+      { path: 'nqueens', component: NQueensComponent },
+
     ])
   ],
   declarations: [
