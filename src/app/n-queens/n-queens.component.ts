@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./n-queens.component.css'],
 })
 export class NQueensComponent {
-  n: number = 8; // Default to 8 queens
+  n: number = 8;  // Default to 8 queens
   board: number[][] = []; // The N x N chess board
   solutions: number[][][] = []; // Array to hold all valid solutions
 
